@@ -1,4 +1,4 @@
-import { Table, ChoiceColumn, StringColumn, ReferenceColumn } from '@servicenow/sdk/core'
+import { Table, ChoiceColumn, StringColumn, ReferenceColumn, DueDateColumn } from '@servicenow/sdk/core'
 
 export const x_1985693_franchis_franchise_request = Table({
     actions: ['read', 'update', 'create'],
@@ -32,6 +32,7 @@ export const x_1985693_franchis_franchise_request = Table({
             label: [
                 {
                     label: 'AI Status',
+                    plural: 'AI Status',
                 },
             ],
         }),
@@ -49,6 +50,14 @@ export const x_1985693_franchis_franchise_request = Table({
                     label: 'Substitution',
                     sequence: 2,
                 },
+                registration: {
+                    label: 'Registration',
+                    sequence: 0,
+                },
+                cancellation: {
+                    label: 'Cancellation',
+                    sequence: 2,
+                },
             },
             dropdown: 'dropdown_without_none',
             label: [
@@ -61,6 +70,7 @@ export const x_1985693_franchis_franchise_request = Table({
             label: [
                 {
                     label: 'OR Number',
+                    plural: 'OR Numbers',
                 },
             ],
         }),
@@ -68,6 +78,7 @@ export const x_1985693_franchis_franchise_request = Table({
             label: [
                 {
                     label: 'CR Number',
+                    plural: 'CR Numbers',
                 },
             ],
         }),
@@ -75,6 +86,7 @@ export const x_1985693_franchis_franchise_request = Table({
             label: [
                 {
                     label: 'DTI / SEC Registration Number',
+                    plural: 'DTI / SEC Registration Numbers',
                 },
             ],
         }),
@@ -113,6 +125,7 @@ export const x_1985693_franchis_franchise_request = Table({
             label: [
                 {
                     label: 'Franchise Type',
+                    plural: 'Franchise Types',
                 },
             ],
         }),
@@ -120,6 +133,7 @@ export const x_1985693_franchis_franchise_request = Table({
             label: [
                 {
                     label: 'Operator Name',
+                    plural: 'Operator Names',
                 },
             ],
             referenceTable: 'sys_user',
@@ -203,6 +217,7 @@ export const x_1985693_franchis_franchise_request = Table({
             label: [
                 {
                     label: 'Region',
+                    plural: 'Regions',
                 },
             ],
         }),
@@ -210,6 +225,7 @@ export const x_1985693_franchis_franchise_request = Table({
             label: [
                 {
                     label: 'Garage Address',
+                    plural: 'Garage Address',
                 },
             ],
         }),
@@ -217,6 +233,7 @@ export const x_1985693_franchis_franchise_request = Table({
             label: [
                 {
                     label: 'Plate Number',
+                    plural: 'Plate Numbers',
                 },
             ],
         }),
@@ -224,9 +241,50 @@ export const x_1985693_franchis_franchise_request = Table({
             label: [
                 {
                     label: 'Officer Remarks',
+                    plural: 'Officer Remarks',
                 },
             ],
             maxLength: 1000,
+        }),
+        progress: ChoiceColumn({
+            choices: {
+                done: {
+                    label: 'Done',
+                    sequence: 3,
+                },
+                ltfrb_review: {
+                    label: 'LTFRB Review',
+                    sequence: 2,
+                },
+                draft: {
+                    label: 'Draft',
+                    sequence: 0,
+                },
+                ai_check: {
+                    label: 'AI Check',
+                    sequence: 1,
+                },
+            },
+            dropdown: 'dropdown_without_none',
+            label: [
+                {
+                    label: 'Progress',
+                },
+            ],
+        }),
+        old: StringColumn({
+            label: [
+                {
+                    label: 'Old',
+                },
+            ],
+        }),
+        expiration_date: DueDateColumn({
+            label: [
+                {
+                    label: 'Expiration Date',
+                },
+            ],
         }),
     },
 })
