@@ -781,6 +781,15 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_choice'
+                        id: '43fbe08d499549e18b8ab5807dd33e62'
+                        key: {
+                            name: 'x_1985693_franchis_franchise_request'
+                            element: 'request_type'
+                            value: 'registration'
+                        }
+                    },
+                    {
                         table: 'sys_number'
                         id: '449ea2bd9394c3103e6ff55a7bba10c1'
                         key: {
@@ -978,6 +987,14 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_dictionary'
+                        id: '5f226f9bfeb0448bb63364144dccae93'
+                        key: {
+                            name: 'x_1985693_franchis_franchise_request'
+                            element: 'progress'
+                        }
+                    },
+                    {
                         table: 'sys_ui_element'
                         id: '61220812931087103e6ff55a7bba106a'
                         deleted: true
@@ -1073,6 +1090,15 @@ declare global {
                         key: {
                             name: 'x_1985693_franchis_franchise_request'
                             element: 'plate_number'
+                        }
+                    },
+                    {
+                        table: 'sys_choice'
+                        id: '6a724676d16e442fb74fc64b7f1daeaf'
+                        key: {
+                            name: 'x_1985693_franchis_franchise_request'
+                            element: 'progress'
+                            value: 'ai_check'
                         }
                     },
                     {
@@ -1492,6 +1518,24 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_documentation'
+                        id: '91d6c187089b4c06a8672d7c66e2bf5a'
+                        key: {
+                            name: 'x_1985693_franchis_franchise_request'
+                            element: 'progress'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '937b33b3b1064caea63e2699e8ce8d6e'
+                        key: {
+                            name: 'x_1985693_franchis_franchise_request'
+                            element: 'expiration_date'
+                            language: 'en'
+                        }
+                    },
+                    {
                         table: 'sys_choice_set'
                         id: '964eaaf3309c4c3d8143a2ecebf19b29'
                         key: {
@@ -1691,6 +1735,15 @@ declare global {
                         key: {
                             model: 'dec4fab993d4c3103e6ff55a7bba1001'
                             element: 'table_name'
+                        }
+                    },
+                    {
+                        table: 'sys_choice'
+                        id: 'ac1f83132a874444a184d95382b904f0'
+                        key: {
+                            name: 'x_1985693_franchis_franchise_request'
+                            element: 'progress'
+                            value: 'ltfrb_review'
                         }
                     },
                     {
@@ -2182,6 +2235,15 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_choice'
+                        id: 'c7534409e32d424db79b8754f88ad12b'
+                        key: {
+                            name: 'x_1985693_franchis_franchise_request'
+                            element: 'request_type'
+                            value: 'cancellation'
+                        }
+                    },
+                    {
                         table: 'sys_ui_form_section'
                         id: 'c89a1f35931cc3103e6ff55a7bba104f'
                         key: {
@@ -2371,6 +2433,15 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_documentation'
+                        id: 'df03f996ea394d898b3597a872e9bf73'
+                        key: {
+                            name: 'x_1985693_franchis_franchise_request'
+                            element: 'old'
+                            language: 'en'
+                        }
+                    },
+                    {
                         table: 'sys_dictionary'
                         id: 'e013c99da7d343bc99deb7f3cdd5358a'
                         key: {
@@ -2413,6 +2484,14 @@ declare global {
                             name: 'x_1985693_franchis_franchise_request'
                             element: 'plate_number'
                             language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: 'e39e34b7163645e1a8b5834d6cd74992'
+                        key: {
+                            name: 'x_1985693_franchis_franchise_request'
+                            element: 'old'
                         }
                     },
                     {
@@ -2469,6 +2548,15 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_choice'
+                        id: 'e84ec33e5dd7483fa960050b87c4009c'
+                        key: {
+                            name: 'x_1985693_franchis_franchise_request'
+                            element: 'progress'
+                            value: 'done'
+                        }
+                    },
+                    {
                         table: 'sys_ux_lib_asset'
                         id: 'e87f6cf7cc474deeb1626c9622be2ce5'
                         key: {
@@ -2494,6 +2582,14 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_dictionary'
+                        id: 'ea8c1f0ec0a4468ea2ea2f9854b43682'
+                        key: {
+                            name: 'x_1985693_franchis_franchise_request'
+                            element: 'expiration_date'
+                        }
+                    },
+                    {
                         table: 'sys_hub_flow_input'
                         id: 'eac4fab993d4c3103e6ff55a7bba1037'
                         deleted: true
@@ -2509,6 +2605,15 @@ declare global {
                             name: 'x_1985693_franchis_franchise_request'
                             element: 'garage_address'
                             language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_choice'
+                        id: 'ec30225db4304bb780cfb10b0288a471'
+                        key: {
+                            name: 'x_1985693_franchis_franchise_request'
+                            element: 'progress'
+                            value: 'draft'
                         }
                     },
                     {
