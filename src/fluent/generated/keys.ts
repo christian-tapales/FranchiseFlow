@@ -349,6 +349,13 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_ui_page'
+                        id: '1f5c85af4afe40f3a9bb65ce8545029d'
+                        key: {
+                            endpoint: 'x_1985693_franchis_manager.do'
+                        }
+                    },
+                    {
                         table: 'sys_ui_element'
                         id: '1fe80251dd0a49d28191afd6c6b2daf6'
                         key: {
@@ -1376,6 +1383,7 @@ declare global {
                     {
                         table: 'sys_ui_page'
                         id: '8703e363cc954b7eba4895e4ba59e8cb'
+                        deleted: true
                         key: {
                             endpoint: 'x_1985693_franchis_incident_manager.do'
                         }
