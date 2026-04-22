@@ -1,26 +1,26 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import { IncidentService } from './services/IncidentService'
-import IncidentList from './components/IncidentList'
-import IncidentForm from './components/IncidentForm'
+import { FranchiseService } from './services/FranchiseService'
+import FranchiseList from './components/FranchiseList'
+import FranchiseForm from './components/FranchiseForm'
 import './app.css'
 
 export default function App() {
-    const [incidents, setIncidents] = useState([])
+    const [franchises, setFranchises] = useState([])
     const [loading, setLoading] = useState(true)
     const [showForm, setShowForm] = useState(false)
-    const [selectedIncident, setSelectedIncident] = useState(null)
+    const [selectedFranchise, setSelectedFranchise] = useState(null)
     const [error, setError] = useState(null)
 
-    const incidentService = useMemo(() => new IncidentService(), [])
+    const franchiseService = useMemo(() => new FranchiseService(), [])
 
-    const refreshIncidents = async () => {
+    const refreshFranchises = async () => {
         try {
             setLoading(true)
             setError(null)
-            const data = await incidentService.list()
-            setIncidents(data)
+            const data = await franchiseService.list()
+            setFranchises(data)
         } catch (err) {
-            setError('Failed to load incidents: ' + (err.message || 'Unknown error'))
+            setError('Failed to load franchises: ' + (err.message || 'Unknown error'))
             console.error(err)
         } finally {
             setLoading(false)
@@ -28,40 +28,40 @@ export default function App() {
     }
 
     useEffect(() => {
-        void refreshIncidents()
+        void refreshFranchises()
     }, [])
 
     const handleCreateClick = () => {
-        setSelectedIncident(null)
+        setSelectedFranchise(null)
         setShowForm(true)
     }
 
-    const handleEditClick = (incident) => {
-        setSelectedIncident(incident)
+    const handleEditClick = (franchise) => {
+        setSelectedFranchise(franchise)
         setShowForm(true)
     }
 
     const handleFormClose = () => {
         setShowForm(false)
-        setSelectedIncident(null)
+        setSelectedFranchise(null)
     }
 
     const handleFormSubmit = async (formData) => {
         setLoading(true)
         try {
-            if (selectedIncident) {
+            if (selectedFranchise) {
                 const sysId =
-                    typeof selectedIncident.sys_id === 'object'
-                        ? selectedIncident.sys_id.value
-                        : selectedIncident.sys_id
-                await incidentService.update(sysId, formData)
+                    typeof selectedFranchise.sys_id === 'object'
+                        ? selectedFranchise.sys_id.value
+                        : selectedFranchise.sys_id
+                await franchiseService.update(sysId, formData)
             } else {
-                await incidentService.create(formData)
+                await franchiseService.create(formData)
             }
             setShowForm(false)
-            await refreshIncidents()
+            await refreshFranchises()
         } catch (err) {
-            setError('Failed to save incident: ' + (err.message || 'Unknown error'))
+            setError('Failed to save franchise: ' + (err.message || 'Unknown error'))
             console.error(err)
         } finally {
             setLoading(false)
@@ -69,11 +69,11 @@ export default function App() {
     }
 
     return (
-        <div className="incident-app">
+        <div className="franchise-app">
             <header className="app-header">
-                <h1>Incident Response Manager</h1>
+                <h1>Franchise Response Manager</h1>
                 <button className="create-button" onClick={handleCreateClick}>
-                    Create New Incident
+                    Create New Franchise
                 </button>
             </header>
 
@@ -87,16 +87,16 @@ export default function App() {
             {loading ? (
                 <div className="loading">Loading...</div>
             ) : (
-                <IncidentList
-                    incidents={incidents}
+                <FranchiseList
+                    franchises={franchises}
                     onEdit={handleEditClick}
-                    onRefresh={refreshIncidents}
-                    service={incidentService}
+                    onRefresh={refreshFranchises}
+                    service={franchiseService}
                 />
             )}
 
             {showForm && (
-                <IncidentForm incident={selectedIncident} onSubmit={handleFormSubmit} onCancel={handleFormClose} />
+                <FranchiseForm franchise={selectedFranchise} onSubmit={handleFormSubmit} onCancel={handleFormClose} />
             )}
         </div>
     )

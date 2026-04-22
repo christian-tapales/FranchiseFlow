@@ -1,9 +1,9 @@
-.incident-list {
+.franchise-list {
     margin-top: 20px;
     overflow-x: auto;
 }
 
-.incident-list table {
+.franchise-list table {
     width: 100%;
     border-collapse: collapse;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -11,23 +11,23 @@
     overflow: hidden;
 }
 
-.incident-list th {
+.franchise-list th {
     background-color: #f5f5f5;
     text-align: left;
     padding: 12px 15px;
     font-weight: 600;
 }
 
-.incident-list td {
+.franchise-list td {
     padding: 12px 15px;
     border-top: 1px solid #eee;
 }
 
-.incident-list tr:nth-child(even) {
+.franchise-list tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
-.incident-list tr:hover {
+.franchise-list tr:hover {
     background-color: #f2f2f2;
 }
 

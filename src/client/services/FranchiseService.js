@@ -1,9 +1,9 @@
-export class IncidentService {
+export class FranchiseService {
     constructor() {
-        this.tableName = 'incident'
+        this.tableName = 'franchise'
     }
 
-    // Return all incidents
+    // Return all franchises
     async list() {
         try {
             const searchParams = new URLSearchParams()
@@ -27,12 +27,12 @@ export class IncidentService {
             const { result } = await response.json()
             return result || []
         } catch (error) {
-            console.error('Error fetching incidents:', error)
+            console.error('Error fetching franchises:', error)
             throw error
         }
     }
 
-    // Get a single incident by sys_id
+    // Get a single franchise by sys_id
     async get(sysId) {
         try {
             const searchParams = new URLSearchParams()
@@ -54,12 +54,12 @@ export class IncidentService {
             const { result } = await response.json()
             return result
         } catch (error) {
-            console.error(`Error fetching incident ${sysId}:`, error)
+            console.error(`Error fetching franchise ${sysId}:`, error)
             throw error
         }
     }
 
-    // Create a new incident
+    // Create a new franchise
     async create(data) {
         try {
             const response = await fetch(`/api/now/table/${this.tableName}`, {
@@ -82,12 +82,12 @@ export class IncidentService {
 
             return response.json()
         } catch (error) {
-            console.error('Error creating incident:', error)
+            console.error('Error creating franchise:', error)
             throw error
         }
     }
 
-    // Update an incident
+    // Update an franchise
     async update(sysId, data) {
         try {
             const response = await fetch(`/api/now/table/${this.tableName}/${sysId}`, {
@@ -107,12 +107,12 @@ export class IncidentService {
 
             return response.json()
         } catch (error) {
-            console.error(`Error updating incident ${sysId}:`, error)
+            console.error(`Error updating franchise ${sysId}:`, error)
             throw error
         }
     }
 
-    // Delete an incident
+    // Delete an franchise
     async delete(sysId) {
         try {
             const response = await fetch(`/api/now/table/${this.tableName}/${sysId}`, {
@@ -130,7 +130,7 @@ export class IncidentService {
 
             return response.ok
         } catch (error) {
-            console.error(`Error deleting incident ${sysId}:`, error)
+            console.error(`Error deleting franchise ${sysId}:`, error)
             throw error
         }
     }
