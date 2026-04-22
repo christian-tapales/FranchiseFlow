@@ -1,6 +1,6 @@
 export class FranchiseService {
     constructor() {
-        this.tableName = 'franchise'
+        this.tableName = 'x_1985693_franchis_franchise_request'
     }
 
     // Return all franchises

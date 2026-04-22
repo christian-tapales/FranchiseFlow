@@ -4,6 +4,7 @@ import FranchiseList from './components/FranchiseList'
 import FranchiseForm from './components/FranchiseForm'
 import './app.css'
 
+
 export default function App() {
     const [franchises, setFranchises] = useState([])
     const [loading, setLoading] = useState(true)
@@ -13,6 +14,7 @@ export default function App() {
 
     const franchiseService = useMemo(() => new FranchiseService(), [])
 
+    
     const refreshFranchises = async () => {
         try {
             setLoading(true)
@@ -101,3 +103,5 @@ export default function App() {
         </div>
     )
 }
+
+
