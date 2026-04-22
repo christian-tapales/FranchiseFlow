@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import './IncidentForm.css'
+import './FranchiseForm.css'
 
-export default function IncidentForm({ incident, onSubmit, onCancel }) {
-    const isEditing = !!incident
+export default function FranchiseForm({ franchise, onSubmit, onCancel }) {
+    const isEditing = !!franchise
 
     // Initialize form state
     const [formData, setFormData] = useState({
@@ -12,18 +12,18 @@ export default function IncidentForm({ incident, onSubmit, onCancel }) {
         impact: '2',
     })
 
-    // Load incident data if editing
+    // Load franchise data if editing
     useEffect(() => {
-        if (incident) {
+        if (franchise) {
             // Extract primitive values from potential objects
             const shortDesc =
-                typeof incident.short_description === 'object'
-                    ? incident.short_description.value
-                    : incident.short_description
+                typeof franchise.short_description === 'object'
+                    ? franchise.short_description.value
+                    : franchise.short_description
             const description =
-                typeof incident.description === 'object' ? incident.description.value : incident.description
-            const state = typeof incident.state === 'object' ? incident.state.value : incident.state
-            const impact = typeof incident.impact === 'object' ? incident.impact.value : incident.impact
+                typeof franchise.description === 'object' ? franchise.description.value : franchise.description
+            const state = typeof franchise.state === 'object' ? franchise.state.value : franchise.state
+            const impact = typeof franchise.impact === 'object' ? franchise.impact.value : franchise.impact
 
             setFormData({
                 short_description: shortDesc || '',
@@ -32,7 +32,7 @@ export default function IncidentForm({ incident, onSubmit, onCancel }) {
                 impact: impact || '2',
             })
         }
-    }, [incident])
+    }, [franchise])
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -51,7 +51,7 @@ export default function IncidentForm({ incident, onSubmit, onCancel }) {
         <div className="form-overlay">
             <div className="form-container">
                 <div className="form-header">
-                    <h2>{isEditing ? `Edit ${incident.number.display_value}` : 'Create New Incident'}</h2>
+                    <h2>{isEditing ? `Edit ${franchise.number.display_value}` : 'Create New Franchise'}</h2>
                     <button type="button" className="close-button" onClick={onCancel}>
                         ×
                     </button>

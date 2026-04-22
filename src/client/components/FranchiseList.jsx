@@ -1,19 +1,19 @@
 import React from 'react'
-import './IncidentList.css'
+import './FranchiseList.css'
 
-export default function IncidentList({ incidents, onEdit, onRefresh, service }) {
-    const handleDelete = async (incident) => {
-        if (!confirm(`Are you sure you want to delete ${incident.number.display_value}?`)) {
+export default function FranchiseList({ franchises, onEdit, onRefresh, service }) {
+    const handleDelete = async (franchise) => {
+        if (!confirm(`Are you sure you want to delete ${franchise.number.display_value}?`)) {
             return
         }
 
         try {
-            const sysId = typeof incident.sys_id === 'object' ? incident.sys_id.value : incident.sys_id
+            const sysId = typeof franchise.sys_id === 'object' ? franchise.sys_id.value : franchise.sys_id
             await service.delete(sysId)
             onRefresh()
         } catch (error) {
-            console.error('Failed to delete incident:', error)
-            alert('Failed to delete incident: ' + (error.message || 'Unknown error'))
+            console.error('Failed to delete franchise:', error)
+            alert('Failed to delete franchise: ' + (error.message || 'Unknown error'))
         }
     }
 
@@ -52,9 +52,9 @@ export default function IncidentList({ incidents, onEdit, onRefresh, service }) 
     }
 
     return (
-        <div className="incident-list">
-            {incidents.length === 0 ? (
-                <div className="no-incidents">No incidents found</div>
+        <div className="franchise-list">
+            {franchises.length === 0 ? (
+                <div className="no-franchises">No franchises found</div>
             ) : (
                 <table>
                     <thead>
@@ -68,32 +68,32 @@ export default function IncidentList({ incidents, onEdit, onRefresh, service }) 
                         </tr>
                     </thead>
                     <tbody>
-                        {incidents.map((incident) => {
+                        {franchises.map((franchise) => {
                             // Extract primitive values from potential objects
                             const number =
-                                typeof incident.number === 'object' ? incident.number.display_value : incident.number
+                                typeof franchise.number === 'object' ? franchise.number.display_value : franchise.number
                             const shortDesc =
-                                typeof incident.short_description === 'object'
-                                    ? incident.short_description.display_value
-                                    : incident.short_description
+                                typeof franchise.short_description === 'object'
+                                    ? franchise.short_description.display_value
+                                    : franchise.short_description
                             const state =
-                                typeof incident.state === 'object' ? incident.state.display_value : incident.state
+                                typeof franchise.state === 'object' ? franchise.state.display_value : franchise.state
                             const impact =
-                                typeof incident.impact === 'object' ? incident.impact.display_value : incident.impact
+                                typeof franchise.impact === 'object' ? franchise.impact.display_value : franchise.impact
                             const openedAt =
-                                typeof incident.opened_at === 'object'
-                                    ? incident.opened_at.display_value
-                                    : incident.opened_at
+                                typeof franchise.opened_at === 'object'
+                                    ? franchise.opened_at.display_value
+                                    : franchise.opened_at
 
                             return (
-                                <tr key={typeof incident.sys_id === 'object' ? incident.sys_id.value : incident.sys_id}>
+                                <tr key={typeof franchise.sys_id === 'object' ? franchise.sys_id.value : franchise.sys_id}>
                                     <td>{number}</td>
                                     <td>{shortDesc}</td>
                                     <td>
-                                        <span className={`state-badge ${getStateClass(incident.state)}`}>{state}</span>
+                                        <span className={`state-badge ${getStateClass(franchise.state)}`}>{state}</span>
                                     </td>
                                     <td>
-                                        <span className={`impact-badge ${getImpactClass(incident.impact)}`}>
+                                        <span className={`impact-badge ${getImpactClass(franchise.impact)}`}>
                                             {impact}
                                         </span>
                                     </td>
@@ -102,15 +102,15 @@ export default function IncidentList({ incidents, onEdit, onRefresh, service }) 
                                         <div className="action-buttons">
                                             <button
                                                 className="edit-button"
-                                                onClick={() => onEdit(incident)}
-                                                aria-label={`Edit incident ${number}`}
+                                                onClick={() => onEdit(franchise)}
+                                                aria-label={`Edit franchise ${number}`}
                                             >
                                                 Edit
                                             </button>
                                             <button
                                                 className="delete-button"
-                                                onClick={() => handleDelete(incident)}
-                                                aria-label={`Delete incident ${number}`}
+                                                onClick={() => handleDelete(franchise)}
+                                                aria-label={`Delete franchise ${number}`}
                                             >
                                                 Delete
                                             </button>
