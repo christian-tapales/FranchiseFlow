@@ -8,7 +8,7 @@ export class FranchiseService {
         try {
             const searchParams = new URLSearchParams()
             searchParams.set('sysparm_display_value', 'all')
-            searchParams.set('sysparm_fields', 'sys_id,number,short_description,description,state,impact,opened_at')
+            searchParams.set('sysparm_fields', 'sys_id,number,plate_number,request_type,progress,expiration_date,opened_at,region,franchise_type,operator_name,cr_number,or_number,dti_sec_registration_number,ai_status,officer_remarks')
             searchParams.set('sysparm_query', 'ORDERBYDESCopened_at')
 
             const response = await fetch(`/api/now/table/${this.tableName}?${searchParams.toString()}`, {

@@ -4,17 +4,18 @@ import FranchiseList from './components/FranchiseList'
 import FranchiseForm from './components/FranchiseForm'
 import './app.css'
 
-
 export default function App() {
     const [franchises, setFranchises] = useState([])
     const [loading, setLoading] = useState(true)
     const [showForm, setShowForm] = useState(false)
     const [selectedFranchise, setSelectedFranchise] = useState(null)
     const [error, setError] = useState(null)
+    
+    // Phase 2: Persona Switcher State
+    const [userRole, setUserRole] = useState('operator') // 'operator' or 'officer'
 
     const franchiseService = useMemo(() => new FranchiseService(), [])
 
-    
     const refreshFranchises = async () => {
         try {
             setLoading(true)
@@ -70,13 +71,33 @@ export default function App() {
         }
     }
 
+    const toggleRole = () => {
+        const nextRole = userRole === 'operator' ? 'officer' : 'operator'
+        setUserRole(nextRole)
+    }
+
     return (
-        <div className="franchise-app">
+        <div className={`franchise-app role-${userRole}`}>
             <header className="app-header">
-                <h1>Franchise Response Manager</h1>
-                <button className="create-button" onClick={handleCreateClick}>
-                    Create New Franchise
-                </button>
+                <div className="header-left">
+                    <h1>FranchiseFlow</h1>
+                    <div className="persona-badge">{userRole.toUpperCase()} VIEW</div>
+                </div>
+                
+                <div className="header-actions">
+                    <div className="persona-switcher">
+                        <span>Switch View:</span>
+                        <button className={`toggle-btn ${userRole}`} onClick={toggleRole}>
+                            <div className="toggle-thumb"></div>
+                        </button>
+                    </div>
+
+                    {userRole === 'operator' && (
+                        <button className="create-button" onClick={handleCreateClick}>
+                            + New Application
+                        </button>
+                    )}
+                </div>
             </header>
 
             {error && (
@@ -86,19 +107,30 @@ export default function App() {
                 </div>
             )}
 
-            {loading ? (
-                <div className="loading">Loading...</div>
-            ) : (
-                <FranchiseList
-                    franchises={franchises}
-                    onEdit={handleEditClick}
-                    onRefresh={refreshFranchises}
-                    service={franchiseService}
-                />
-            )}
+            <main className="app-main">
+                {loading ? (
+                    <div className="loading-container">
+                        <div className="loader"></div>
+                        <p>Fetching LTFRB Records...</p>
+                    </div>
+                ) : (
+                    <FranchiseList
+                        franchises={franchises}
+                        onEdit={handleEditClick}
+                        onRefresh={refreshFranchises}
+                        service={franchiseService}
+                        userRole={userRole}
+                    />
+                )}
+            </main>
 
             {showForm && (
-                <FranchiseForm franchise={selectedFranchise} onSubmit={handleFormSubmit} onCancel={handleFormClose} />
+                <FranchiseForm 
+                    franchise={selectedFranchise} 
+                    onSubmit={handleFormSubmit} 
+                    onCancel={handleFormClose} 
+                    userRole={userRole}
+                />
             )}
         </div>
     )

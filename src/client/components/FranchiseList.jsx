@@ -1,9 +1,11 @@
 import React from 'react'
+import ProgressBar from './ProgressBar'
 import './FranchiseList.css'
 
-export default function FranchiseList({ franchises, onEdit, onRefresh, service }) {
+export default function FranchiseList({ franchises, onEdit, onRefresh, service, userRole }) {
+    
     const handleDelete = async (franchise) => {
-        if (!confirm(`Are you sure you want to delete ${franchise.number.display_value}?`)) {
+        if (!confirm(`Are you sure you want to delete ${franchise.number?.display_value}?`)) {
             return
         }
 
@@ -17,111 +19,95 @@ export default function FranchiseList({ franchises, onEdit, onRefresh, service }
         }
     }
 
-    const getStateClass = (state) => {
-        const stateValue = typeof state === 'object' ? state.display_value : state
-
-        switch (stateValue) {
-            case 'New':
-                return 'state-new'
-            case 'In Progress':
-                return 'state-in-progress'
-            case 'On Hold':
-                return 'state-on-hold'
-            case 'Resolved':
-                return 'state-resolved'
-            case 'Closed':
-                return 'state-closed'
-            default:
-                return ''
-        }
-    }
-
-    const getImpactClass = (impact) => {
-        const impactValue = typeof impact === 'object' ? impact.value : impact
-
-        switch (impactValue) {
-            case '1':
-                return 'impact-high'
-            case '2':
-                return 'impact-medium'
-            case '3':
-                return 'impact-low'
-            default:
-                return ''
-        }
+    const formatLabel = (val) => {
+        if (!val) return 'N/A'
+        return typeof val === 'object' ? val.display_value : val
     }
 
     return (
-        <div className="franchise-list">
-            {franchises.length === 0 ? (
-                <div className="no-franchises">No franchises found</div>
-            ) : (
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Number</th>
-                            <th>Description</th>
-                            <th>State</th>
-                            <th>Impact</th>
-                            <th>Opened</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {franchises.map((franchise) => {
-                            // Extract primitive values from potential objects
-                            const number =
-                                typeof franchise.number === 'object' ? franchise.number.display_value : franchise.number
-                            const shortDesc =
-                                typeof franchise.short_description === 'object'
-                                    ? franchise.short_description.display_value
-                                    : franchise.short_description
-                            const state =
-                                typeof franchise.state === 'object' ? franchise.state.display_value : franchise.state
-                            const impact =
-                                typeof franchise.impact === 'object' ? franchise.impact.display_value : franchise.impact
-                            const openedAt =
-                                typeof franchise.opened_at === 'object'
-                                    ? franchise.opened_at.display_value
-                                    : franchise.opened_at
+        <div className="franchise-dashboard">
+            <div className="dashboard-stats">
+                <div className="stat-card">
+                    <span className="stat-label">Total Applications</span>
+                    <span className="stat-value">{franchises.length}</span>
+                </div>
+                <div className="stat-card">
+                    <span className="stat-label">Pending Review</span>
+                    <span className="stat-value">
+                        {franchises.filter(f => {
+                            const prog = typeof f.progress === 'object' ? f.progress.value : f.progress
+                            return prog === 'ai_check' || prog === 'ltfrb_review'
+                        }).length}
+                    </span>
+                </div>
+            </div>
 
-                            return (
-                                <tr key={typeof franchise.sys_id === 'object' ? franchise.sys_id.value : franchise.sys_id}>
-                                    <td>{number}</td>
-                                    <td>{shortDesc}</td>
-                                    <td>
-                                        <span className={`state-badge ${getStateClass(franchise.state)}`}>{state}</span>
-                                    </td>
-                                    <td>
-                                        <span className={`impact-badge ${getImpactClass(franchise.impact)}`}>
-                                            {impact}
-                                        </span>
-                                    </td>
-                                    <td>{openedAt}</td>
-                                    <td>
-                                        <div className="action-buttons">
-                                            <button
-                                                className="edit-button"
-                                                onClick={() => onEdit(franchise)}
-                                                aria-label={`Edit franchise ${number}`}
-                                            >
-                                                Edit
-                                            </button>
-                                            <button
-                                                className="delete-button"
-                                                onClick={() => handleDelete(franchise)}
-                                                aria-label={`Delete franchise ${number}`}
-                                            >
+            <div className="franchise-grid">
+                {franchises.length === 0 ? (
+                    <div className="empty-state">
+                        <div className="empty-icon">📂</div>
+                        <h3>No applications found</h3>
+                        <p>Applications you submit will appear here.</p>
+                    </div>
+                ) : (
+                    franchises.map((franchise) => {
+                        const sysId = typeof franchise.sys_id === 'object' ? franchise.sys_id.value : franchise.sys_id
+                        const progress = typeof franchise.progress === 'object' ? franchise.progress.value : franchise.progress
+                        const number = franchise.number?.display_value || 'REQ-NEW'
+                        
+                        return (
+                            <div key={sysId} className={`franchise-card status-${progress}`}>
+                                <div className="card-header">
+                                    <span className="request-number">{number}</span>
+                                    <span className={`badge type-${typeof franchise.request_type === 'object' ? franchise.request_type.value : franchise.request_type}`}>
+                                        {formatLabel(franchise.request_type)}
+                                    </span>
+                                </div>
+
+                                <div className="card-body">
+                                    <div className="info-row">
+                                        <span className="info-label">Plate Number</span>
+                                        <span className="info-value highlighted">{formatLabel(franchise.plate_number)}</span>
+                                    </div>
+                                    <div className="info-row">
+                                        <span className="info-label">Region</span>
+                                        <span className="info-value">{formatLabel(franchise.region)}</span>
+                                    </div>
+                                    <div className="info-row">
+                                        <span className="info-label">Franchise Type</span>
+                                        <span className="info-value">{formatLabel(franchise.franchise_type)}</span>
+                                    </div>
+                                    
+                                    <ProgressBar value={progress} />
+
+                                    {franchise.officer_remarks && (
+                                        <div className="remarks-box">
+                                            <strong>Officer Remarks:</strong>
+                                            <p>{formatLabel(franchise.officer_remarks)}</p>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="card-footer">
+                                    <div className="footer-actions">
+                                        <button className="btn-secondary" onClick={() => onEdit(franchise)}>
+                                            {userRole === 'officer' ? 'Review' : 'Edit'}
+                                        </button>
+                                        {userRole === 'operator' && progress === 'draft' && (
+                                            <button className="btn-danger" onClick={() => handleDelete(franchise)}>
                                                 Delete
                                             </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            )
-                        })}
-                    </tbody>
-                </table>
-            )}
+                                        )}
+                                    </div>
+                                    <span className="opened-date">
+                                        {formatLabel(franchise.opened_at)}
+                                    </span>
+                                </div>
+                            </div>
+                        )
+                    })
+                )}
+            </div>
         </div>
     )
 }

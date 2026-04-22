@@ -2411,6 +2411,14 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_choice_set'
+                        id: 'dc15b108df17450cb33171fc0dce342b'
+                        key: {
+                            name: 'x_1985693_franchis_franchise_request'
+                            element: 'progress'
+                        }
+                    },
+                    {
                         table: 'sys_ui_element'
                         id: 'dd922a768fe44fca96a5253e318326e5'
                         key: {
