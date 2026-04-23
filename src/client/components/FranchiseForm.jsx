@@ -76,21 +76,47 @@ export default function FranchiseForm({ franchise, onSubmit, onCancel, userRole 
             
             if (scanType === 'or_cr') {
                 // More flexible Regex based on the real document provided
-                // OR: could be 12345-0987654321-12 OR a 9-12 digit number like 230100457
-                const orMatch = text.match(/\b(?:\d{5}-\d{10}-\d{2}|\d{9,12})\b/i)
+                // CR: could be 1234-5-678-9012345 OR 8-10 digits followed by -1 like 31456789-1 (allowing spaces around dash)
+                // CR: The massive red text '31456789-1' is covered by a watermark which scrambles the '-1' for Tesseract.
+                // We use a multi-line context search to find 'CR' and then grab the digits, auto-healing the dash if needed.
+                const crFormat1 = text.match(/\b(\d{4}-\d-\d{3}-\d{7})\b/i)
+                let crMatch = null
                 
-                // CR: could be 1234-5-678-9012345 OR 8-10 digits followed by -1 like 31456789-1
-                const crMatch = text.match(/\b(?:\d{4}-\d-\d{3}-\d{7}|\d{7,10}-\d)\b/i)
-                
+                if (crFormat1) {
+                    crMatch = crFormat1[1]
+                } else {
+                    const crContextMatch = text.match(/CR[\s\S]{0,30}?\b([1-9]\d{6,9})(?:[\s\-_~]*([0-9A-Za-z]))?\b/i)
+                    if (crContextMatch) {
+                        const mainPart = crContextMatch[1]
+                        let dashPart = crContextMatch[2]
+                        
+                        // Auto-heal common OCR errors for the number '1'
+                        if (dashPart && /[Il]/i.test(dashPart)) dashPart = '1'
+                        
+                        // If the watermark completely destroyed the '-1', we default to '-1' to save the scan
+                        crMatch = dashPart ? `${mainPart}-${dashPart}` : `${mainPart}-1`
+                    }
+                }
+                // OR: Try to find 'OR No.' context first, otherwise grab a 9-12 digit number that doesn't start with 0000
+                const orContextMatch = text.match(/OR\s*No\.?[\s:|-]*(\d{8,12})/i)
+                let orMatch = null
+                if (orContextMatch) {
+                    orMatch = orContextMatch[1]
+                } else {
+                    // Fallback: grab numbers that don't look like the MV File ID (which has many leading zeros)
+                    const matches = text.match(/\b[1-9]\d{8,11}\b/g)
+                    if (matches) orMatch = matches[matches.length - 1] // usually at the bottom
+                }
+
                 // Plate: could be CBA-1234 or GYW9012 (optional dash/space)
-                const plateMatch = text.match(/\b[A-Z]{3}[\s-]?\d{3,4}\b/i)
+                const plateMatchRaw = text.match(/\b[A-Z]{3}[\s-]?\d{3,4}\b/i)
+                const plateMatch = plateMatchRaw ? plateMatchRaw[0].toUpperCase().replace(/[\s-]/g, '').replace(/(.{3})/, '$1-') : null
 
                 setFormData(prev => ({
                     ...prev,
-                    // Normalize the extracted plate to always have a dash for consistency
-                    or_number: orMatch ? orMatch[0].toUpperCase() : prev.or_number,
-                    cr_number: crMatch ? crMatch[0] : prev.cr_number,
-                    plate_number: plateMatch ? plateMatch[0].toUpperCase().replace(/[\s-]/g, '').replace(/(.{3})/, '$1-') : prev.plate_number
+                    or_number: orMatch || prev.or_number,
+                    cr_number: crMatch || prev.cr_number,
+                    plate_number: plateMatch || prev.plate_number
                 }))
 
                 if (!orMatch && !crMatch && !plateMatch) {
