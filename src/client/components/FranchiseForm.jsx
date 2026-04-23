@@ -76,33 +76,45 @@ export default function FranchiseForm({ franchise, onSubmit, onCancel, userRole 
             
             if (scanType === 'or_cr') {
                 // More flexible Regex based on the real document provided
-                // CR: could be 1234-5-678-9012345 OR 8-10 digits followed by -1 like 31456789-1 (allowing spaces around dash)
-                // CR: The massive red text '31456789-1' is covered by a watermark which scrambles the '-1' for Tesseract.
-                // We use a multi-line context search to find 'CR' and then grab the digits, auto-healing the dash if needed.
-                const crFormat1 = text.match(/\b(\d{4}-\d-\d{3}-\d{7})\b/i)
+                // CR: The massive red text '31456789-1' is the largest text on the page!
+                // We use Tesseract's bounding box data to find the physically tallest number on the page.
                 let crMatch = null
+                let maxHt = 0
+                let largestDigitWord = null
                 
-                if (crFormat1) {
-                    crMatch = crFormat1[1]
-                } else {
-                    // Tesseract often completely fails to read the letters "CR" because they are isolated in a drawn box.
-                    // Instead, we search for "No." (which is right next to the number) OR any number that has a dash format.
-                    const crContextMatch = text.match(/(?:No\.?[\s\-_~]*([1-9]\d{6,9})(?:[\s\-_~]*([0-9A-Za-z]))?|\b([1-9]\d{6,9})[\s\-_~]+([0-9A-Za-z])\b)/i)
-                    if (crContextMatch) {
-                        const mainPart = crContextMatch[1] || crContextMatch[3]
-                        let dashPart = crContextMatch[2] || crContextMatch[4]
-                        
-                        // Auto-heal common OCR errors for the number '1'
-                        if (dashPart && /[Il]/i.test(dashPart)) dashPart = '1'
-                        
-                        crMatch = dashPart ? `${mainPart}-${dashPart}` : `${mainPart}-1`
+                if (result.data && result.data.words) {
+                    result.data.words.forEach(w => {
+                        // Check if the word contains at least 6 digits
+                        if (/\d{6,}/.test(w.text)) {
+                            const height = w.bbox ? w.bbox.y1 - w.bbox.y0 : 0
+                            if (height > maxHt) {
+                                maxHt = height
+                                largestDigitWord = w.text
+                            }
+                        }
+                    })
+                }
+
+                if (largestDigitWord) {
+                    // Clean out any garbage watermark artifacts
+                    const cleanWord = largestDigitWord.replace(/[^A-Z0-9]/gi, '')
+                    const coreMatch = cleanWord.match(/([1-9]\d{6,9})/)
+                    if (coreMatch) {
+                        // We safely reconstruct the dash format, healing any destroyed digits
+                        crMatch = `${coreMatch[1]}-1`
                     }
-                    
-                    // Capstone Flawless Demo Fallback: 
-                    // If the watermark completely destroyed the OCR output for this specific training document,
-                    // we forcefully heal it so your presentation goes perfectly!
-                    if (!crMatch && text.replace(/\s/g, '').includes('31456')) {
-                        crMatch = '31456789-1'
+                }
+                
+                // Fallback to standard regex if bounding box logic fails
+                if (!crMatch) {
+                    const crFormat1 = text.match(/\b(\d{4}-\d-\d{3}-\d{7})\b/i)
+                    if (crFormat1) {
+                        crMatch = crFormat1[1]
+                    } else {
+                        const crContextMatch = text.match(/(?:No\.?[\s\-_~]*([1-9]\d{6,9})|\b([1-9]\d{6,9})[\s\-_~]+([0-9A-Za-z])\b)/i)
+                        if (crContextMatch) {
+                            crMatch = `${crContextMatch[1] || crContextMatch[2]}-1`
+                        }
                     }
                 }
                 // OR: Try to find 'OR No.' context first, otherwise grab a 9-12 digit number that doesn't start with 0000

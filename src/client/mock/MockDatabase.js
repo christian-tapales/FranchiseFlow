@@ -80,11 +80,13 @@ export const validateApplication = (formData) => {
 
     } else {
         // If it doesn't exist in the mock DB, we still enforce the physical prefix rule
-        const firstLetter = formData.plate_number.charAt(0).toUpperCase()
+        // Extract only the letters to support formats like 232-GZL where numbers come first
+        const lettersOnly = formData.plate_number.replace(/[^A-Z]/gi, '')
+        const firstLetter = lettersOnly.charAt(0).toUpperCase()
         const validPrefixes = REGION_PREFIXES[formData.region]
         
         if (validPrefixes && !validPrefixes.includes(firstLetter)) {
-            return `Format Error: Plate numbers in this region must start with one of: ${validPrefixes.join(', ')}`
+            return `Format Error: The alphabetic part of plate numbers in this region must start with one of: ${validPrefixes.join(', ')}`
         }
     }
 
