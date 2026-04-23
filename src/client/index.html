@@ -5,6 +5,9 @@
   <!-- Initialize globals and Include ServiceNow's required scripts -->
   <sdk:now-ux-globals></sdk:now-ux-globals>
 
+  <!-- Load Tesseract.js via CDN to avoid now-sdk worker bundling crashes -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
   <!-- Include your React entry point -->
   <script src="./main.jsx" type="module"></script>
 </head>

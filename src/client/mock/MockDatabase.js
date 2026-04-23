@@ -35,10 +35,10 @@ export const MOCK_LTFRB_DATABASE = [
         dti_sec_registration_number: '987654321098'
     },
     {
-        plate_number: 'GZL-229', // From screenshot
+        plate_number: 'GYW-9012', // From training material image
         region: 'region_7', // Starts with G
-        or_number: '23419-152942034-34',
-        cr_number: '0134-5-135-2515135',
+        or_number: '230100457',
+        cr_number: '31456789-1',
         dti_sec_registration_number: '9023830840983'
     },
     {
@@ -51,9 +51,14 @@ export const MOCK_LTFRB_DATABASE = [
 ]
 
 export const validateApplication = (formData) => {
+    if (!formData.plate_number) return null
+    
+    // Normalize plate by removing spaces and dashes for robust comparison
+    const normalizedInputPlate = formData.plate_number.replace(/[^A-Z0-9]/gi, '').toUpperCase()
+    
     // 1. Check if plate number exists in our mock DB
     const dbRecord = MOCK_LTFRB_DATABASE.find(
-        record => record.plate_number.toUpperCase() === formData.plate_number.toUpperCase()
+        record => record.plate_number.replace(/[^A-Z0-9]/gi, '').toUpperCase() === normalizedInputPlate
     )
 
     if (dbRecord) {

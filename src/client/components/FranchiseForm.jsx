@@ -65,29 +65,58 @@ export default function FranchiseForm({ franchise, onSubmit, onCancel, userRole 
         if (!file) return
 
         setIsScanning(true)
+        setErrors(prev => ({ ...prev, validation: null }))
 
-        // Mocking the AI scan
-        setTimeout(() => {
+        try {
+            // Using window.Tesseract from the CDN loaded in index.html
+            const result = await window.Tesseract.recognize(file, 'eng', {
+                logger: m => console.log(m) // Logs progress
+            })
+            const text = result.data.text
+            
             if (scanType === 'or_cr') {
-                // Pre-fill with our mock data for demonstration
+                // More flexible Regex based on the real document provided
+                // OR: could be 12345-0987654321-12 OR a 9-12 digit number like 230100457
+                const orMatch = text.match(/\b(?:\d{5}-\d{10}-\d{2}|\d{9,12})\b/i)
+                
+                // CR: could be 1234-5-678-9012345 OR 8-10 digits followed by -1 like 31456789-1
+                const crMatch = text.match(/\b(?:\d{4}-\d-\d{3}-\d{7}|\d{7,10}-\d)\b/i)
+                
+                // Plate: could be CBA-1234 or GYW9012 (optional dash/space)
+                const plateMatch = text.match(/\b[A-Z]{3}[\s-]?\d{3,4}\b/i)
+
                 setFormData(prev => ({
                     ...prev,
-                    or_number: MOCK_LTFRB_DATABASE[2].or_number,
-                    cr_number: MOCK_LTFRB_DATABASE[2].cr_number,
-                    plate_number: MOCK_LTFRB_DATABASE[2].plate_number // The AI usually extracts plate from OR/CR too
+                    // Normalize the extracted plate to always have a dash for consistency
+                    or_number: orMatch ? orMatch[0].toUpperCase() : prev.or_number,
+                    cr_number: crMatch ? crMatch[0] : prev.cr_number,
+                    plate_number: plateMatch ? plateMatch[0].toUpperCase().replace(/[\s-]/g, '').replace(/(.{3})/, '$1-') : prev.plate_number
                 }))
+
+                if (!orMatch && !crMatch && !plateMatch) {
+                    setErrors({ validation: "Could not detect OR/CR numbers from the image. Please ensure the image is clear." })
+                }
             } else if (scanType === 'dti') {
+                // Regex for DTI (12 digits)
+                const dtiMatch = text.match(/\b\d{12}\b/)
+                
                 setFormData(prev => ({
                     ...prev,
-                    dti_sec_registration_number: MOCK_LTFRB_DATABASE[2].dti_sec_registration_number
+                    dti_sec_registration_number: dtiMatch ? dtiMatch[0] : prev.dti_sec_registration_number
                 }))
+
+                if (!dtiMatch) {
+                    setErrors({ validation: "Could not detect DTI/SEC number from the image." })
+                }
             }
+        } catch (err) {
+            console.error("Tesseract scan failed:", err)
+            setErrors({ validation: "AI Scanning failed. Please enter the numbers manually." })
+        } finally {
             setIsScanning(false)
             setScanType(null)
-            
-            // Clear input so same file can be selected again if needed
             if (fileInputRef.current) fileInputRef.current.value = ''
-        }, 2000)
+        }
     }
 
     const handleSubmit = (e) => {
