@@ -22,7 +22,8 @@ export default function App() {
         try {
             setLoading(true)
             setError(null)
-            const data = await franchiseService.list()
+            // Pass the current user so the service can filter for operators
+            const data = await franchiseService.list(currentUser)
             setFranchises(data)
         } catch (err) {
             setError('Failed to load franchises: ' + (err.message || 'Unknown error'))
@@ -56,6 +57,12 @@ export default function App() {
     const handleFormSubmit = async (formData) => {
         setLoading(true)
         try {
+            // Auto-fill the operator_name to ensure operators only see their own tickets
+            // Since operator_name is a reference field to sys_user, we pass the user's sys_id
+            if (!formData.operator_name && currentUser) {
+                formData.operator_name = currentUser.sys_id
+            }
+
             if (selectedFranchise) {
                 const sysId =
                     typeof selectedFranchise.sys_id === 'object'

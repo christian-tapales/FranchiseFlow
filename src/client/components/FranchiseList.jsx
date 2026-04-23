@@ -106,6 +106,10 @@ export default function FranchiseList({ franchises, onEdit, onRefresh, service, 
 
                                 <div className="card-body">
                                     <div className="info-row">
+                                        <span className="info-label">Operator</span>
+                                        <span className="info-value" style={{fontWeight: 600}}>{formatLabel(franchise.operator_name) || 'Unknown'}</span>
+                                    </div>
+                                    <div className="info-row">
                                         <span className="info-label">Plate Number</span>
                                         <span className="info-value highlighted">{formatLabel(franchise.plate_number)}</span>
                                     </div>

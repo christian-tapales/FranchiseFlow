@@ -6,6 +6,7 @@ export default function Auth({ onLogin }) {
     const [isLogin, setIsLogin] = useState(true)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
+    const [showPassword, setShowPassword] = useState(false)
 
     const [formData, setFormData] = useState({
         username: '',
@@ -81,9 +82,24 @@ export default function Auth({ onLogin }) {
                         <input type="text" name="username" value={formData.username} onChange={handleChange} required />
                     </div>
 
-                    <div className="auth-group">
+                    <div className="auth-group password-group">
                         <label>Password</label>
-                        <input type="password" name="password" value={formData.password} onChange={handleChange} required />
+                        <div className="password-input-wrapper">
+                            <input 
+                                type={showPassword ? "text" : "password"} 
+                                name="password" 
+                                value={formData.password} 
+                                onChange={handleChange} 
+                                required 
+                            />
+                            <button 
+                                type="button" 
+                                className="password-toggle" 
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
+                                {showPassword ? '👁️' : '👁️‍🗨️'}
+                            </button>
+                        </div>
                     </div>
 
                     <button type="submit" className="auth-submit" disabled={loading}>
