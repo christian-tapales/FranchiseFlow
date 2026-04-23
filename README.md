@@ -16,7 +16,7 @@ Built as a capstone project for **CSIT440 - Industry Trends**, this application 
 
 ## 🛠️ Technology Stack
 
-*   **Platform**: ServiceNow (Vancouver/Washington Release)
+*   **Platform**: ServiceNow (Zurich Release)
 *   **Framework**: ServiceNow Fluent SDK, React.js
 *   **Styling**: Pure Vanilla CSS with CSS Variables (Custom Design System)
 *   **Typography**: Google Fonts (Inter, Outfit, JetBrains Mono)
@@ -54,7 +54,6 @@ Built as a capstone project for **CSIT440 - Industry Trends**, this application 
 
 ## 💻 Viewing the Application
 Once deployed, navigate to the custom UI Page endpoint on your instance:
-`https://devXXXXX.service-now.com/x_1985693_franchis_manager.do`
-
+`https://dev329194.service-now.com/x_1985693_franchis_manager.do`
 ---
 *Developed for CSIT440 - Industry Trends.*

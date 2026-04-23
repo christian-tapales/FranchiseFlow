@@ -1,0 +1,129 @@
+.auth-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.auth-container {
+    background: white;
+    width: 100%;
+    max-width: 440px;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05), 0 20px 48px rgba(0, 0, 0, 0.05);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.auth-header h1 {
+    margin: 0 0 8px 0;
+    color: var(--primary-color, #2563eb);
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.auth-header p {
+    margin: 0;
+    color: #64748b;
+    font-size: 15px;
+}
+
+.auth-error {
+    background-color: #fef2f2;
+    color: #dc2626;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    font-size: 14px;
+    border: 1px solid #fecaca;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.auth-row {
+    display: flex;
+    gap: 16px;
+}
+
+.auth-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+.auth-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+}
+
+.auth-group input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: border-color 0.2s;
+}
+
+.auth-group input:focus {
+    outline: none;
+    border-color: var(--primary-color, #2563eb);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.auth-submit {
+    margin-top: 8px;
+    background-color: var(--primary-color, #2563eb);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.auth-submit:hover:not(:disabled) {
+    background-color: #1d4ed8;
+}
+
+.auth-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.auth-footer {
+    margin-top: 24px;
+    text-align: center;
+}
+
+.auth-switch {
+    background: none;
+    border: none;
+    color: var(--primary-color, #2563eb);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.auth-switch:hover {
+    text-decoration: underline;
+}

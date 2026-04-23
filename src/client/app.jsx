@@ -2,18 +2,20 @@ import React, { useState, useEffect, useMemo } from 'react'
 import { FranchiseService } from './services/FranchiseService'
 import FranchiseList from './components/FranchiseList'
 import FranchiseForm from './components/FranchiseForm'
+import Auth from './components/Auth'
 import './app.css'
 
 export default function App() {
+    const [currentUser, setCurrentUser] = useState(null)
     const [franchises, setFranchises] = useState([])
     const [loading, setLoading] = useState(true)
     const [showForm, setShowForm] = useState(false)
     const [selectedFranchise, setSelectedFranchise] = useState(null)
     const [error, setError] = useState(null)
     
-    // Phase 2: Persona Switcher State
-    const [userRole, setUserRole] = useState('operator') // 'operator' or 'officer'
-
+    // For now, defaulting to operator. We need to discuss how to detect your "officer" accounts!
+    // Automatically assign role based on the role retrieved from the backend
+    const userRole = currentUser?.isOfficer ? 'officer' : 'operator'
     const franchiseService = useMemo(() => new FranchiseService(), [])
 
     const refreshFranchises = async () => {
@@ -31,8 +33,10 @@ export default function App() {
     }
 
     useEffect(() => {
-        void refreshFranchises()
-    }, [])
+        if (currentUser) {
+            void refreshFranchises()
+        }
+    }, [currentUser])
 
     const handleCreateClick = () => {
         setSelectedFranchise(null)
@@ -71,9 +75,13 @@ export default function App() {
         }
     }
 
-    const toggleRole = () => {
-        const nextRole = userRole === 'operator' ? 'officer' : 'operator'
-        setUserRole(nextRole)
+    const handleLogout = () => {
+        setCurrentUser(null)
+        setFranchises([])
+    }
+
+    if (!currentUser) {
+        return <Auth onLogin={(user) => setCurrentUser(user)} />
     }
 
     return (
@@ -83,13 +91,11 @@ export default function App() {
                     <h1>FranchiseFlow</h1>
                     <div className="persona-badge">{userRole.toUpperCase()} VIEW</div>
                 </div>
-                
+
                 <div className="header-actions">
-                    <div className="persona-switcher">
-                        <span>Switch View:</span>
-                        <button className={`toggle-btn ${userRole}`} onClick={toggleRole}>
-                            <div className="toggle-thumb"></div>
-                        </button>
+                    <div className="current-user-info">
+                        Welcome, {currentUser.first_name || currentUser.user_name}
+                        <button className="logout-btn" onClick={handleLogout}>Log Out</button>
                     </div>
 
                     {userRole === 'operator' && (
@@ -125,10 +131,10 @@ export default function App() {
             </main>
 
             {showForm && (
-                <FranchiseForm 
-                    franchise={selectedFranchise} 
-                    onSubmit={handleFormSubmit} 
-                    onCancel={handleFormClose} 
+                <FranchiseForm
+                    franchise={selectedFranchise}
+                    onSubmit={handleFormSubmit}
+                    onCancel={handleFormClose}
                     userRole={userRole}
                 />
             )}

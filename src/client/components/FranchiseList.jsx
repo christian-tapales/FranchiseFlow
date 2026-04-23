@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ProgressBar from './ProgressBar'
 import './FranchiseList.css'
 
 export default function FranchiseList({ franchises, onEdit, onRefresh, service, userRole }) {
-    
+    const [searchQuery, setSearchQuery] = useState('')
+    const [statusFilter, setStatusFilter] = useState('all')
+
     const handleDelete = async (franchise) => {
         if (!confirm(`Are you sure you want to delete ${franchise.number?.display_value}?`)) {
             return
@@ -24,6 +26,18 @@ export default function FranchiseList({ franchises, onEdit, onRefresh, service, 
         return typeof val === 'object' ? val.display_value : val
     }
 
+    // Filter Logic
+    const filteredFranchises = franchises.filter(franchise => {
+        const number = (franchise.number?.display_value || '').toLowerCase()
+        const plate = (typeof franchise.plate_number === 'object' ? franchise.plate_number.display_value : franchise.plate_number || '').toLowerCase()
+        const progress = typeof franchise.progress === 'object' ? franchise.progress.value : franchise.progress
+        
+        const matchesSearch = number.includes(searchQuery.toLowerCase()) || plate.includes(searchQuery.toLowerCase())
+        const matchesStatus = statusFilter === 'all' || progress === statusFilter
+
+        return matchesSearch && matchesStatus
+    })
+
     return (
         <div className="franchise-dashboard">
             <div className="dashboard-stats">
@@ -42,15 +56,41 @@ export default function FranchiseList({ franchises, onEdit, onRefresh, service, 
                 </div>
             </div>
 
+            <div className="dashboard-controls">
+                <div className="search-box">
+                    <span className="search-icon">🔍</span>
+                    <input 
+                        type="text" 
+                        placeholder="Search Plate or Request Number..." 
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="search-input"
+                    />
+                </div>
+                <div className="filter-box">
+                    <select 
+                        value={statusFilter} 
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                        className="filter-select"
+                    >
+                        <option value="all">All Statuses</option>
+                        <option value="draft">Draft</option>
+                        <option value="ai_check">AI Verifying</option>
+                        <option value="ltfrb_review">LTFRB Review</option>
+                        <option value="done">Approved</option>
+                    </select>
+                </div>
+            </div>
+
             <div className="franchise-grid">
-                {franchises.length === 0 ? (
+                {filteredFranchises.length === 0 ? (
                     <div className="empty-state">
                         <div className="empty-icon">📂</div>
                         <h3>No applications found</h3>
-                        <p>Applications you submit will appear here.</p>
+                        <p>{franchises.length === 0 ? 'Applications you submit will appear here.' : 'Try adjusting your search or filters.'}</p>
                     </div>
                 ) : (
-                    franchises.map((franchise) => {
+                    filteredFranchises.map((franchise) => {
                         const sysId = typeof franchise.sys_id === 'object' ? franchise.sys_id.value : franchise.sys_id
                         const progress = typeof franchise.progress === 'object' ? franchise.progress.value : franchise.progress
                         const number = franchise.number?.display_value || 'REQ-NEW'
