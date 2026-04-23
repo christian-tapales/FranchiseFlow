@@ -29,10 +29,17 @@ export const MOCK_LTFRB_DATABASE = [
     },
     {
         plate_number: 'NXL-9988',
-        region: 'ncr', // Starts with N
-        or_number: '54321-1234567890-99',
-        cr_number: '4321-0-987-6543210',
+        region: 'ncr', // Starts with N, P, Q, T, U, W, X
+        or_number: '00000-1111111111-22',
+        cr_number: '9876-5-432-1098765',
         dti_sec_registration_number: '987654321098'
+    },
+    {
+        plate_number: 'NDS-3456',
+        region: 'ncr', // Starts with N
+        or_number: '12345-0987654321-12',
+        cr_number: '1234-5-678-9012345',
+        dti_sec_registration_number: '5419876' // Sync with uploaded DTI sample
     },
     {
         plate_number: 'GYW-9012', // From training material image
