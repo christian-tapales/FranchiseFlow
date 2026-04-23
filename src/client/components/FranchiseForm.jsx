@@ -77,30 +77,31 @@ export default function FranchiseForm({ franchise, onSubmit, onCancel, userRole 
             if (scanType === 'or_cr') {
                 // More flexible Regex based on the real document provided
                 // CR: The massive red text '31456789-1' is the largest text on the page!
-                // We use Tesseract's bounding box data to find the physically tallest number on the page.
+                // Watermarks often slice right through the middle of the number, causing Tesseract to split it into two words (e.g. "31" and "456789-1").
+                // To fix this, we scan line-by-line instead of word-by-word. We find the physically tallest line of text!
                 let crMatch = null
                 let maxHt = 0
-                let largestDigitWord = null
+                let largestLineText = null
                 
-                if (result.data && result.data.words) {
-                    result.data.words.forEach(w => {
-                        // Check if the word contains at least 6 digits
-                        if (/\d{6,}/.test(w.text)) {
-                            const height = w.bbox ? w.bbox.y1 - w.bbox.y0 : 0
+                if (result.data && result.data.lines) {
+                    result.data.lines.forEach(line => {
+                        // Check if the line contains at least 4 digits
+                        if (/\d{4,}/.test(line.text)) {
+                            const height = line.bbox ? line.bbox.y1 - line.bbox.y0 : 0
                             if (height > maxHt) {
                                 maxHt = height
-                                largestDigitWord = w.text
+                                largestLineText = line.text
                             }
                         }
                     })
                 }
 
-                if (largestDigitWord) {
-                    // Clean out any garbage watermark artifacts
-                    const cleanWord = largestDigitWord.replace(/[^A-Z0-9]/gi, '')
+                if (largestLineText) {
+                    // Example largestLineText: "No. 31 456789-1"
+                    // By removing all spaces and letters, we perfectly stitch the split number back together!
+                    const cleanWord = largestLineText.replace(/[^A-Z0-9]/gi, '')
                     const coreMatch = cleanWord.match(/([1-9]\d{6,9})/)
                     if (coreMatch) {
-                        // We safely reconstruct the dash format, healing any destroyed digits
                         crMatch = `${coreMatch[1]}-1`
                     }
                 }

@@ -52,10 +52,10 @@ export const MOCK_LTFRB_DATABASE = [
 
 export const validateApplication = (formData) => {
     if (!formData.plate_number) return null
-    
+
     // Normalize plate by removing spaces and dashes for robust comparison
     const normalizedInputPlate = formData.plate_number.replace(/[^A-Z0-9]/gi, '').toUpperCase()
-    
+
     // 1. Check if plate number exists in our mock DB
     const dbRecord = MOCK_LTFRB_DATABASE.find(
         record => record.plate_number.replace(/[^A-Z0-9]/gi, '').toUpperCase() === normalizedInputPlate
@@ -84,9 +84,9 @@ export const validateApplication = (formData) => {
         const lettersOnly = formData.plate_number.replace(/[^A-Z]/gi, '')
         const firstLetter = lettersOnly.charAt(0).toUpperCase()
         const validPrefixes = REGION_PREFIXES[formData.region]
-        
+
         if (validPrefixes && !validPrefixes.includes(firstLetter)) {
-            return `Format Error: The alphabetic part of plate numbers in this region must start with one of: ${validPrefixes.join(', ')}`
+            return `Format Error: The alphabetic part of plate numbers in this region must start with: ${validPrefixes.join(', ')}`
         }
     }
 
