@@ -3,13 +3,21 @@ export class FranchiseService {
         this.tableName = 'x_1985693_franchis_franchise_request'
     }
 
-    // Return all franchises
-    async list() {
+    // Return franchises, filtered if user is an operator
+    async list(currentUser) {
         try {
             const searchParams = new URLSearchParams()
             searchParams.set('sysparm_display_value', 'all')
             searchParams.set('sysparm_fields', 'sys_id,number,plate_number,request_type,progress,expiration_date,opened_at,region,franchise_type,operator_name,cr_number,or_number,dti_sec_registration_number,ai_status,officer_remarks')
-            searchParams.set('sysparm_query', 'ORDERBYDESCopened_at')
+            
+            let query = 'ORDERBYDESCopened_at'
+            if (currentUser && !currentUser.isOfficer) {
+                // The Operator Name field in ServiceNow is a Reference to the sys_user table.
+                // We must query using the user's sys_id, not their text name or sys_created_by.
+                query = `operator_name=${currentUser.sys_id}^ORDERBYDESCopened_at`
+            }
+            
+            searchParams.set('sysparm_query', query)
 
             const response = await fetch(`/api/now/table/${this.tableName}?${searchParams.toString()}`, {
                 method: 'GET',

@@ -50,7 +50,7 @@ export default function FranchiseList({ franchises, onEdit, onRefresh, service, 
                     <span className="stat-value">
                         {franchises.filter(f => {
                             const prog = typeof f.progress === 'object' ? f.progress.value : f.progress
-                            return prog === 'ai_check' || prog === 'ltfrb_review'
+                            return prog === 'ltfrb_review'
                         }).length}
                     </span>
                 </div>
@@ -75,7 +75,6 @@ export default function FranchiseList({ franchises, onEdit, onRefresh, service, 
                     >
                         <option value="all">All Statuses</option>
                         <option value="draft">Draft</option>
-                        <option value="ai_check">AI Verifying</option>
                         <option value="ltfrb_review">LTFRB Review</option>
                         <option value="done">Approved</option>
                     </select>
@@ -105,6 +104,10 @@ export default function FranchiseList({ franchises, onEdit, onRefresh, service, 
                                 </div>
 
                                 <div className="card-body">
+                                    <div className="info-row">
+                                        <span className="info-label">Operator</span>
+                                        <span className="info-value" style={{fontWeight: 600}}>{formatLabel(franchise.operator_name) || 'Unknown'}</span>
+                                    </div>
                                     <div className="info-row">
                                         <span className="info-label">Plate Number</span>
                                         <span className="info-value highlighted">{formatLabel(franchise.plate_number)}</span>
