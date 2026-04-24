@@ -23,14 +23,21 @@ export default function FranchiseList({ franchises, onEdit, onRefresh, service, 
 
     const formatLabel = (val) => {
         if (!val) return 'N/A'
-        return typeof val === 'object' ? val.display_value : val
+        const label = typeof val === 'object' ? (val.display_value || val.value || 'N/A') : val
+        return String(label)
     }
 
     // Filter Logic
     const filteredFranchises = franchises.filter(franchise => {
-        const number = (franchise.number?.display_value || '').toLowerCase()
-        const plate = (typeof franchise.plate_number === 'object' ? franchise.plate_number.display_value : franchise.plate_number || '').toLowerCase()
-        const progress = typeof franchise.progress === 'object' ? franchise.progress.value : franchise.progress
+        const number = String(franchise.number?.display_value || franchise.number || '').toLowerCase()
+        
+        let rawPlate = ''
+        if (franchise.plate_number) {
+            rawPlate = typeof franchise.plate_number === 'object' ? (franchise.plate_number.display_value || franchise.plate_number.value || '') : franchise.plate_number
+        }
+        const plate = String(rawPlate).toLowerCase()
+        
+        const progress = typeof franchise.progress === 'object' ? (franchise.progress?.value || '') : (franchise.progress || '')
         
         const matchesSearch = number.includes(searchQuery.toLowerCase()) || plate.includes(searchQuery.toLowerCase())
         const matchesStatus = statusFilter === 'all' || progress === statusFilter
@@ -49,7 +56,7 @@ export default function FranchiseList({ franchises, onEdit, onRefresh, service, 
                     <span className="stat-label">Pending Review</span>
                     <span className="stat-value">
                         {franchises.filter(f => {
-                            const prog = typeof f.progress === 'object' ? f.progress.value : f.progress
+                            const prog = (f.progress && typeof f.progress === 'object') ? f.progress.value : f.progress
                             return prog === 'ltfrb_review'
                         }).length}
                     </span>
@@ -90,15 +97,15 @@ export default function FranchiseList({ franchises, onEdit, onRefresh, service, 
                     </div>
                 ) : (
                     filteredFranchises.map((franchise) => {
-                        const sysId = typeof franchise.sys_id === 'object' ? franchise.sys_id.value : franchise.sys_id
-                        const progress = typeof franchise.progress === 'object' ? franchise.progress.value : franchise.progress
+                        const sysId = (franchise.sys_id && typeof franchise.sys_id === 'object') ? franchise.sys_id.value : franchise.sys_id
+                        const progress = (franchise.progress && typeof franchise.progress === 'object') ? franchise.progress.value : franchise.progress
                         const number = franchise.number?.display_value || 'REQ-NEW'
                         
                         return (
                             <div key={sysId} className={`franchise-card status-${progress}`}>
                                 <div className="card-header">
                                     <span className="request-number">{number}</span>
-                                    <span className={`badge type-${typeof franchise.request_type === 'object' ? franchise.request_type.value : franchise.request_type}`}>
+                                    <span className={`badge type-${(franchise.request_type && typeof franchise.request_type === 'object') ? franchise.request_type.value : franchise.request_type}`}>
                                         {formatLabel(franchise.request_type).toLowerCase() === 'extension' ? 'Renewal' : formatLabel(franchise.request_type)}
                                     </span>
                                 </div>
