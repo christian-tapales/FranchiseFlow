@@ -191,7 +191,7 @@ export default function FranchiseForm({ franchise, onSubmit, onCancel, userRole 
             return
         }
         // If Operator is submitting for the first time
-        const nextStatus = !isEditing ? 'ai_check' : formData.progress
+        const nextStatus = !isEditing ? 'ltfrb_review' : formData.progress
         onSubmit({ ...formData, progress: nextStatus })
     }
 
