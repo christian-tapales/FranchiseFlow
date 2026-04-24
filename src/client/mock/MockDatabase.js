@@ -18,89 +18,108 @@ export const REGION_PREFIXES = {
     barmm: ['X']
 }
 
-// Sample correctly formatted mock database
-export const MOCK_LTFRB_DATABASE = [
+// Separate mock databases to simulate different government agencies
+export const MOCK_LTO_DATABASE = [
     {
         plate_number: 'CBA-1234',
-        region: 'region_3', // Starts with C
+        region: 'region_3', 
         or_number: '12345-0987654321-12',
-        cr_number: '1234-5-678-9012345',
-        dti_sec_registration_number: '123456789012'
+        cr_number: '1234-5-678-9012345'
     },
     {
         plate_number: 'NXL-9988',
-        region: 'ncr', // Starts with N, P, Q, T, U, W, X
+        region: 'ncr', 
         or_number: '00000-1111111111-22',
-        cr_number: '9876-5-432-1098765',
-        dti_sec_registration_number: '987654321098'
+        cr_number: '9876-5-432-1098765'
     },
     {
         plate_number: 'NDS-3456',
-        region: 'ncr', // Starts with N
+        region: 'ncr', 
         or_number: '12345-0987654321-12',
-        cr_number: '1234-5-678-9012345',
-        dti_sec_registration_number: '5419876' // Sync with uploaded DTI sample
+        cr_number: '1234-5-678-9012345'
     },
     {
-        plate_number: 'GYW-9012', // From training material image
-        region: 'region_7', // Starts with G
+        plate_number: 'GYW-9012', 
+        region: 'region_7', 
         or_number: '230100457',
-        cr_number: '31456789-1',
-        dti_sec_registration_number: '9023830840983'
+        cr_number: '31456789-1'
     },
     {
-        plate_number: '123-NSK', // From Dashboard screenshot
-        region: 'ncr', // Starts with N
+        plate_number: '123-NSK', 
+        region: 'ncr', 
         or_number: '99999-8888888888-77',
-        cr_number: '5555-4-333-2222222',
-        dti_sec_registration_number: '5418123' // Sync with uploaded DTI sample #2
+        cr_number: '5555-4-333-2222222'
     },
     {
         plate_number: 'YAH-555',
-        region: 'car', // Starts with Y
+        region: 'car', 
         or_number: '99999-8888888888-77',
-        cr_number: '5555-4-333-2222222',
-        dti_sec_registration_number: '555555555555'
+        cr_number: '5555-4-333-2222222'
     }
+]
+
+export const MOCK_DTI_DATABASE = [
+    '123456789012', // Linked to CBA-1234 operator
+    '987654321098', // Linked to NXL-9988 operator
+    '5419876',      // Linked to NDS-3456 operator
+    '9023830840983',// Linked to GYW-9012 operator
+    '5418123',      // Linked to 123-NSK operator
+    '555555555555'  // Linked to YAH-555 operator
 ]
 
 export const validateApplication = (formData) => {
     if (!formData.plate_number) return null
-
+    
     // Normalize plate by removing spaces and dashes for robust comparison
     const normalizedInputPlate = formData.plate_number.replace(/[^A-Z0-9]/gi, '').toUpperCase()
-
-    // 1. Check if plate number exists in our mock DB
-    const dbRecord = MOCK_LTFRB_DATABASE.find(
+    
+    // 1. Check if plate number exists in our mock LTO DB
+    const ltoRecord = MOCK_LTO_DATABASE.find(
         record => record.plate_number.replace(/[^A-Z0-9]/gi, '').toUpperCase() === normalizedInputPlate
     )
 
-    if (dbRecord) {
-        // If it exists in DB, ensure region matches the DB record
-        if (dbRecord.region !== formData.region) {
-            return `Mismatch Error: The plate number ${formData.plate_number.toUpperCase()} is registered in a different region. Please correct the selected Region.`
+    const isRenewalOrCancellation = ['renewal', 'cancellation'].includes(formData.request_type?.toLowerCase())
+    const isRegistration = formData.request_type?.toLowerCase() === 'registration'
+
+    if (ltoRecord) {
+        // Prevent duplicate registrations
+        if (isRegistration) {
+            return `Duplicate Error: Plate number ${formData.plate_number} is already registered with an active franchise. You cannot submit a new registration.`
         }
 
-        // Validate OR / CR / DTI if provided
-        if (formData.or_number && formData.or_number !== dbRecord.or_number) {
-            return `Validation Error: OR Number does not match LTFRB records for this plate.`
-        }
-        if (formData.cr_number && formData.cr_number !== dbRecord.cr_number) {
-            return `Validation Error: CR Number does not match LTFRB records for this plate.`
-        }
-        if (formData.dti_sec_registration_number && formData.dti_sec_registration_number !== dbRecord.dti_sec_registration_number) {
-            return `Validation Error: DTI/SEC Registration Number does not match LTFRB records.`
+        // If it exists in LTO DB, ensure region matches the DB record
+        if (ltoRecord.region !== formData.region) {
+            return `Data Mismatch: This plate number is registered in ${ltoRecord.region}, not ${formData.region}.`
         }
 
+        // Validate OR and CR against LTO Database
+        if (formData.or_number && formData.or_number !== ltoRecord.or_number) {
+            return `Document Mismatch: The provided OR Number does not match LTO records for this vehicle.`
+        }
+        if (formData.cr_number && formData.cr_number !== ltoRecord.cr_number) {
+            return `Document Mismatch: The provided CR Number does not match LTO records for this vehicle.`
+        }
     } else {
+        if (isRenewalOrCancellation) {
+            return `Record Not Found: Cannot process a ${formData.request_type} because this plate number does not exist in the LTO Database.`
+        }
+
         // If it doesn't exist in the mock DB, we still enforce the physical prefix rule
         // Extract only the letters to support formats like 232-GZL where numbers come first
         const lettersOnly = formData.plate_number.replace(/[^A-Z]/gi, '')
         const firstLetter = lettersOnly.charAt(0).toUpperCase()
         const validPrefixes = REGION_PREFIXES[formData.region]
-
+        
         if (validPrefixes && !validPrefixes.includes(firstLetter)) {
-            return `Format Error: The alphabetic part of plate numbers in this region must start with: ${validPrefixes.join(', ')}`
+            return `Format Error: The alphabetic part of plate numbers in this region must start with one of: ${validPrefixes.join(', ')}`
+        }
+    }
+
+    // 2. Validate DTI/SEC Number against DTI Database
+    if (formData.dti_sec_registration_number) {
+        const dtiExists = MOCK_DTI_DATABASE.includes(formData.dti_sec_registration_number)
+        if (!dtiExists) {
+            return `Verification Failed: The provided Business Name No. or SEC Registration No. (${formData.dti_sec_registration_number}) does not exist in the DTI/SEC Database.`
         }
     }
 
