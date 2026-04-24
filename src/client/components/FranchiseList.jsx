@@ -99,7 +99,7 @@ export default function FranchiseList({ franchises, onEdit, onRefresh, service, 
                                 <div className="card-header">
                                     <span className="request-number">{number}</span>
                                     <span className={`badge type-${typeof franchise.request_type === 'object' ? franchise.request_type.value : franchise.request_type}`}>
-                                        {formatLabel(franchise.request_type)}
+                                        {formatLabel(franchise.request_type).toLowerCase() === 'extension' ? 'Renewal' : formatLabel(franchise.request_type)}
                                     </span>
                                 </div>
 

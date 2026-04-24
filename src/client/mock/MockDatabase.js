@@ -49,6 +49,13 @@ export const MOCK_LTFRB_DATABASE = [
         dti_sec_registration_number: '9023830840983'
     },
     {
+        plate_number: '123-NSK', // From Dashboard screenshot
+        region: 'ncr', // Starts with N
+        or_number: '99999-8888888888-77',
+        cr_number: '5555-4-333-2222222',
+        dti_sec_registration_number: '5418123' // Sync with uploaded DTI sample #2
+    },
+    {
         plate_number: 'YAH-555',
         region: 'car', // Starts with Y
         or_number: '99999-8888888888-77',
