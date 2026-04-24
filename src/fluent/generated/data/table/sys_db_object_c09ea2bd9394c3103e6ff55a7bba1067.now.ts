@@ -269,6 +269,7 @@ export const x_1985693_franchis_franchise_request = Table({
             label: [
                 {
                     label: 'Progress',
+                    plural: 'Progress',
                 },
             ],
         }),
@@ -276,6 +277,7 @@ export const x_1985693_franchis_franchise_request = Table({
             label: [
                 {
                     label: 'Old',
+                    plural: 'Olds',
                 },
             ],
         }),
@@ -283,6 +285,7 @@ export const x_1985693_franchis_franchise_request = Table({
             label: [
                 {
                     label: 'Expiration Date',
+                    plural: 'Expiration Dates',
                 },
             ],
         }),

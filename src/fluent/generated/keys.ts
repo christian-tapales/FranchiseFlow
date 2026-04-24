@@ -781,6 +781,42 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_ui_list_element'
+                        id: '43243cf3939847103e6ff55a7bba10f6'
+                        key: {
+                            list_id: {
+                                id: '4b243cf3939847103e6ff55a7bba10e6'
+                                key: {
+                                    name: 'x_1985693_franchis_franchise_request'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                    element: 'NULL'
+                                    relationship: 'NULL'
+                                    parent: 'NULL'
+                                }
+                            }
+                            element: 'number'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_list_element'
+                        id: '43243cf3939847103e6ff55a7bba10f7'
+                        key: {
+                            list_id: {
+                                id: '4b243cf3939847103e6ff55a7bba10e6'
+                                key: {
+                                    name: 'x_1985693_franchis_franchise_request'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                    element: 'NULL'
+                                    relationship: 'NULL'
+                                    parent: 'NULL'
+                                }
+                            }
+                            element: 'operator_name'
+                        }
+                    },
+                    {
                         table: 'sys_choice'
                         id: '43fbe08d499549e18b8ab5807dd33e62'
                         key: {
@@ -828,6 +864,41 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_ui_list'
+                        id: '4b243cf3939847103e6ff55a7bba10e6'
+                        key: {
+                            name: 'x_1985693_franchis_franchise_request'
+                            view: {
+                                id: 'Default view'
+                                key: {
+                                    name: 'NULL'
+                                }
+                            }
+                            sys_domain: 'global'
+                            element: 'NULL'
+                            relationship: 'NULL'
+                            parent: 'NULL'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_list_element'
+                        id: '4b243cf3939847103e6ff55a7bba10f8'
+                        key: {
+                            list_id: {
+                                id: '4b243cf3939847103e6ff55a7bba10e6'
+                                key: {
+                                    name: 'x_1985693_franchis_franchise_request'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                    element: 'NULL'
+                                    relationship: 'NULL'
+                                    parent: 'NULL'
+                                }
+                            }
+                            element: 'short_description'
+                        }
+                    },
+                    {
                         table: 'sys_ui_element'
                         id: '4c9a1f35931cc3103e6ff55a7bba108c'
                         key: {
@@ -842,6 +913,24 @@ declare global {
                             }
                             element: 'state'
                             position: '0'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_list_element'
+                        id: '4f243cf3939847103e6ff55a7bba10f7'
+                        key: {
+                            list_id: {
+                                id: '4b243cf3939847103e6ff55a7bba10e6'
+                                key: {
+                                    name: 'x_1985693_franchis_franchise_request'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                    element: 'NULL'
+                                    relationship: 'NULL'
+                                    parent: 'NULL'
+                                }
+                            }
+                            element: 'state'
                         }
                     },
                     {
@@ -2226,12 +2315,48 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_ui_list_element'
+                        id: 'c3243cf3939847103e6ff55a7bba10f8'
+                        key: {
+                            list_id: {
+                                id: '4b243cf3939847103e6ff55a7bba10e6'
+                                key: {
+                                    name: 'x_1985693_franchis_franchise_request'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                    element: 'NULL'
+                                    relationship: 'NULL'
+                                    parent: 'NULL'
+                                }
+                            }
+                            element: 'assigned_to'
+                        }
+                    },
+                    {
                         table: 'sys_choice'
                         id: 'c56d34b377c64e6eb51b353878dbaa16'
                         key: {
                             name: 'x_1985693_franchis_franchise_request'
                             element: 'region'
                             value: 'region_6'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_list_element'
+                        id: 'c7243cf3939847103e6ff55a7bba10f7'
+                        key: {
+                            list_id: {
+                                id: '4b243cf3939847103e6ff55a7bba10e6'
+                                key: {
+                                    name: 'x_1985693_franchis_franchise_request'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                    element: 'NULL'
+                                    relationship: 'NULL'
+                                    parent: 'NULL'
+                                }
+                            }
+                            element: 'priority'
                         }
                     },
                     {
@@ -2324,6 +2449,24 @@ declare global {
                             }
                             element: 'garage_address'
                             position: '5'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_list_element'
+                        id: 'cf243cf3939847103e6ff55a7bba10f8'
+                        key: {
+                            list_id: {
+                                id: '4b243cf3939847103e6ff55a7bba10e6'
+                                key: {
+                                    name: 'x_1985693_franchis_franchise_request'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                    element: 'NULL'
+                                    relationship: 'NULL'
+                                    parent: 'NULL'
+                                }
+                            }
+                            element: 'sys_class_name'
                         }
                     },
                     {
